@@ -66,19 +66,28 @@ docker compose up -d
 
 本项目通过 `heroku.yml` 使用 **容器（Container）方式** 部署到 Heroku，无需额外配置 buildpack。
 
-**部署步骤（CLI）：**
+点击一键部署按钮会自动完成：
+- 构建并推送 Docker 镜像
+- 置备 **Heroku Postgres**（Essential-0 套餐）并注入 `DATABASE_URL`
+- 预填常用环境变量（`DATA_DIR=/tmp/data`、`LOG_FILE_ENABLED=false`、`SERVER_STORAGE_TYPE=pgsql`）
+
+> **无需手动设置 `SERVER_STORAGE_URL`**：应用会自动读取 Heroku 注入的 `DATABASE_URL` 作为数据库连接串。
+
+**手动 CLI 部署步骤：**
 
 ```bash
 heroku create <your-app-name>
 heroku stack:set container -a <your-app-name>
+heroku addons:create heroku-postgresql:essential-0 -a <your-app-name>
+heroku config:set SERVER_STORAGE_TYPE=pgsql DATA_DIR=/tmp/data LOG_FILE_ENABLED=false -a <your-app-name>
 git push heroku main
 ```
 
 > Heroku Eco/Basic dyno 30 分钟无访问会休眠；文件系统是临时的，重启后数据丢失。
 >
-> 默认已将 `DATA_DIR` 设为 `/tmp/data`、关闭文件日志，适合免费层使用。
+> 配置和 Token 数据存储在 PostgreSQL，重启不丢失。
 >
-> 如需持久化，请使用 MySQL / Redis / PostgreSQL，并设置：`SERVER_STORAGE_TYPE` 与 `SERVER_STORAGE_URL`。
+> 如果已手动置备其他数据库，可用 `SERVER_STORAGE_URL` 显式指定连接串（优先于 `DATABASE_URL`）。
 
 <br>
 

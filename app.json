@@ -4,6 +4,12 @@
   "website": "https://github.com/rant-ha/gk2api",
   "repository": "https://github.com/rant-ha/gk2api",
   "stack": "container",
+  "addons": [
+    {
+      "plan": "heroku-postgresql:essential-0",
+      "as": "DATABASE"
+    }
+  ],
   "env": {
     "TZ": {
       "description": "Timezone for the application",
@@ -26,12 +32,12 @@
       "required": false
     },
     "SERVER_STORAGE_TYPE": {
-      "description": "Storage backend: local, redis, mysql, postgresql",
-      "value": "local",
+      "description": "Storage backend: local, redis, mysql, pgsql. When DATABASE_URL is set, SERVER_STORAGE_URL is empty, and this is 'local', pgsql is used automatically.",
+      "value": "pgsql",
       "required": false
     },
     "SERVER_STORAGE_URL": {
-      "description": "Connection URL for redis/mysql/postgresql storage (leave empty for local storage)",
+      "description": "Connection URL for redis/mysql/pgsql storage. Leave empty to use DATABASE_URL from the Heroku Postgres add-on.",
       "value": "",
       "required": false
     }
