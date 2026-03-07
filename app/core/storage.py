@@ -1451,6 +1451,25 @@ class StorageFactory:
         storage_type = os.getenv("SERVER_STORAGE_TYPE", "local").lower()
         storage_url = os.getenv("SERVER_STORAGE_URL", "")
 
+        # Heroku / Railway / Render 等平台自动注入 DATABASE_URL（postgres:// 或
+        # postgresql://）。当用户没有显式设置 SERVER_STORAGE_URL 时，自动采用该值
+        # 并将存储类型推断为 pgsql，无需手动复制连接字符串。
+        if not storage_url:
+            database_url = os.getenv("DATABASE_URL", "")
+            if database_url and "://" in database_url:
+                # Extract base scheme (e.g. "postgres" from "postgres://" or
+                # "postgresql" from "postgresql+asyncpg://").
+                db_scheme = database_url.split("://", 1)[0].split("+", 1)[0].lower()
+                if db_scheme in ("postgres", "postgresql", "pgsql"):
+                    storage_url = database_url
+                    # Only infer pgsql when the user hasn't set a different
+                    # storage type; if they set e.g. redis, keep it as-is.
+                    if storage_type == "local":
+                        storage_type = "pgsql"
+                        logger.info(
+                            "StorageFactory: 检测到 DATABASE_URL，自动切换存储后端为 pgsql"
+                        )
+
         logger.info(f"StorageFactory: 初始化存储后端: {storage_type}")
 
         if storage_type == "redis":
