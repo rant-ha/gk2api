@@ -60,6 +60,26 @@ docker compose up -d
 >
 > 持久化请使用 MySQL / Redis / PostgreSQL，并设置：`SERVER_STORAGE_TYPE` 与 `SERVER_STORAGE_URL`。
 
+### Heroku 部署
+
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/rant-ha/gk2api)
+
+本项目通过 `heroku.yml` 使用 **容器（Container）方式** 部署到 Heroku，无需额外配置 buildpack。
+
+**部署步骤（CLI）：**
+
+```bash
+heroku create <your-app-name>
+heroku stack:set container -a <your-app-name>
+git push heroku main
+```
+
+> Heroku Eco/Basic dyno 30 分钟无访问会休眠；文件系统是临时的，重启后数据丢失。
+>
+> 默认已将 `DATA_DIR` 设为 `/tmp/data`、关闭文件日志，适合免费层使用。
+>
+> 如需持久化，请使用 MySQL / Redis / PostgreSQL，并设置：`SERVER_STORAGE_TYPE` 与 `SERVER_STORAGE_URL`。
+
 <br>
 
 ## 管理面板

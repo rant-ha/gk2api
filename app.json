@@ -1,0 +1,46 @@
+{
+  "name": "Grok2API",
+  "description": "Grok2API – FastAPI-based reverse proxy for Grok, supporting streaming/non-streaming chat, image generation, deep thinking, and token pool management.",
+  "website": "https://github.com/rant-ha/gk2api",
+  "repository": "https://github.com/rant-ha/gk2api",
+  "stack": "container",
+  "env": {
+    "TZ": {
+      "description": "Timezone for the application",
+      "value": "Asia/Shanghai",
+      "required": false
+    },
+    "LOG_LEVEL": {
+      "description": "Log level: DEBUG, INFO, WARNING, ERROR",
+      "value": "INFO",
+      "required": false
+    },
+    "LOG_FILE_ENABLED": {
+      "description": "Whether to write logs to file (set false on Heroku where filesystem is ephemeral)",
+      "value": "false",
+      "required": false
+    },
+    "DATA_DIR": {
+      "description": "Directory for persistent data (config, tokens). Use /tmp/data on Heroku (ephemeral).",
+      "value": "/tmp/data",
+      "required": false
+    },
+    "SERVER_STORAGE_TYPE": {
+      "description": "Storage backend: local, redis, mysql, postgresql",
+      "value": "local",
+      "required": false
+    },
+    "SERVER_STORAGE_URL": {
+      "description": "Connection URL for redis/mysql/postgresql storage (leave empty for local storage)",
+      "value": "",
+      "required": false
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "buildpacks": []
+}
