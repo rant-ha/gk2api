@@ -74,4 +74,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD ["sh", "-c", "wget -qO /dev/null http://127.0.0.1:${SERVER_PORT}/health || exit 1"]
 
 ENTRYPOINT ["/app/scripts/entrypoint.sh"]
-CMD ["sh", "-c", "exec granian --interface asgi --host ${SERVER_HOST} --port ${SERVER_PORT} --workers ${SERVER_WORKERS} app.main:app"]
+# 允许优先读取 Heroku 分配的 $PORT，如果没分配则回退到 8000
+CMD ["sh", "-c", "exec granian --interface asgi --host 0.0.0.0 --port ${PORT:-8000} --workers ${SERVER_WORKERS:-1} app.main:app"]
