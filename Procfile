@@ -1,1 +1,1 @@
-web: sh scripts/entrypoint.sh sh -c "exec granian --interface asgi --host 0.0.0.0 --port ${PORT} --workers 1 app.main:app"
+web: sh scripts/init_storage.sh && exec granian --interface asgi --host 0.0.0.0 --port ${PORT} --workers 1 app.main:app
